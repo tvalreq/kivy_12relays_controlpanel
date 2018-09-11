@@ -5,20 +5,20 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 
-from kivy.core.window import Window
+from kivy.config import Config
 
 from kivy.properties import NumericProperty
 
-#import RPi.GPIO as gpio
+import RPi.GPIO as gpio
 
 def iniciar_pines():
 	pines = [4,5,12,13,16,17,18,21,22,23,25,26]
 	print('#[:)]# Estableciendo modo gpio a BCM')
-	#gpio.setmode(gpio.BCM)
+	gpio.setmode(gpio.BCM)
 	print('#[:)]# Estableciendo pines de salida')
 	for pin in pines:
 		pass
-		#gpio.setup(pin, gpio.OUT, initial=gpio.LOW)
+		gpio.setup(pin, gpio.OUT, initial=gpio.LOW)
 	print('#[:)]# Sistema gpio inciado')
 
 
@@ -31,7 +31,7 @@ class RPIButton(ToggleButton):
 	
 	def on_press(self):
 		estadoPin = True if self.state=='down' else False
-		#gpio.output(self.pin, self.estadoPin)
+		gpio.output(self.pin, estadoPin)
 		print('#[:)]# Pulsado botón {0} con PIN {1} y estado {2}'
 				.format(self.text, self.pin, estadoPin))
 
@@ -42,6 +42,11 @@ class ControlPanelApp(App):
 
 
 if __name__ == '__main__':
-	#Window.fullscreen = 'auto'
-	iniciar_pines()
-	ControlPanelApp().run()
+    Config.set('modules','cursor','1') #Activating cursor
+    Config.set('graphics','fullscreen','auto') #Fullscreen auto
+    Config.set('graphics','show_cursor','1') #Showing cursor
+    Config.write()
+
+    iniciar_pines()
+    
+    ControlPanelApp().run()
